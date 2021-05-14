@@ -1,0 +1,28 @@
+.container {
+  margin: 30px 50px;
+}
+
+.page-title {
+  color: rgb(87, 87, 87);
+  text-align: center;
+}
+
+.character-table {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
+  gap: 40px;
+}
+
+.filter-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(35px, 1fr));
+  gap: 10px 40px;
+  margin: 40px 20px;
+}
+
+.filter-item-container {
+  display: flex;
+  align-items: center;
+}

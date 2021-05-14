@@ -1,0 +1,13 @@
+.selector-container {
+  border: 1px solid #656565;
+  border-radius: 10px;
+  padding: 5px;
+  min-width: 50px;
+  margin: 0 5px;
+}
+
+.select-container {
+  height: 20px;
+  min-width: 50px;
+  border: none;
+}

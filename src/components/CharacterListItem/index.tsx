@@ -1,11 +1,21 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+
+import { transformBcAcYears } from "../../utils";
 import { Character } from "../../types";
+import { CharacterListItemHeader } from "./CharacterListItemHeader";
+import { ListItemAttribute } from "../ListItemAttribute";
+
+import "./CharacterListItem.css";
 
 interface ICharacter {
   character: Character;
 }
 
+/**
+ * TODO: We could also deconstruct all characters props, but maybe we will implement
+ * some additional props not related to the character inside this component
+ */
 export const CharacterListItem: FC<ICharacter> = ({ character }) => {
   const { name, aliases, born, died, gender, culture, allegiances, books } =
     character;
@@ -13,32 +23,12 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
   const [alive, setAlive] = useState<string>();
   const appearedInBooksCount = books && books.length;
 
-  function transformYears(yearData: string) {
-    const regex = /\d|\s(AC|BC|ac|bc)/g;
-    let year: string | Array<string> | number | null;
-    year = yearData.match(regex);
-
-    if (!year) {
-      return null;
-    }
-    const lastElement = year[year?.length - 1];
-
-    if (lastElement === " BC") {
-      year.pop();
-      year = `-${year.join("")}`;
-    } else {
-      year.pop();
-      year = `${year.join("")}`;
-    }
-
-    year = parseInt(year, 10);
-    return year;
-  }
-
+  //Calculates when someone died
   const calculateDeath = useCallback((born: string, died: string) => {
     let diedAt: string;
-    const bornYear = transformYears(born);
-    const diedYear = transformYears(died);
+    const bornYear = transformBcAcYears(born);
+    const diedYear = transformBcAcYears(died);
+
     if (typeof bornYear === "number" && typeof diedYear === "number") {
       const yearDifference = diedYear - bornYear;
       diedAt = yearDifference.toString();
@@ -48,6 +38,7 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
     }
   }, []);
 
+  //Checks if someone is dead or alive
   const checkAlive = useCallback(() => {
     if (!died) {
       setAlive("Yes");
@@ -56,7 +47,7 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
       if (death) {
         setAlive(death);
       } else {
-        setAlive("n/a");
+        setAlive("Unknown");
       }
     }
   }, [calculateDeath, born, died]);
@@ -65,8 +56,10 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
     checkAlive();
   }, [checkAlive]);
 
+  //Concats name and aliases
   function concatNames(aliases?: Array<string>, characterName?: string) {
     let name;
+
     if (characterName && aliases?.length) {
       name = [characterName, ...aliases].join(", ");
     } else if (characterName && !aliases?.length) {
@@ -78,7 +71,7 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
         name = aliases[0];
       }
     } else {
-      name = "n/a";
+      name = "Unknown";
     }
 
     if (name.charAt(name.length - 2) === ",") {
@@ -88,10 +81,12 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
     return name;
   }
 
+  //Extracts the allegiance id from allegiance url
   function getAllegianceId(allegiancesUrl: string) {
     return allegiancesUrl.replace(/[^1-9]/g, "");
   }
 
+  //Renders allegiances if exist with link to house details
   const getAllegiances = () => {
     if (!allegiances.length) {
       return "No allegiances";
@@ -102,7 +97,7 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
             const allegianceId = getAllegianceId(allegiance);
             return (
               <li key={allegianceId}>
-                <Link to={`/house-details/${allegianceId}`}>
+                <Link className="link" to={`/house-details/${allegianceId}`}>
                   {allegianceId}
                 </Link>
               </li>
@@ -113,20 +108,43 @@ export const CharacterListItem: FC<ICharacter> = ({ character }) => {
     }
   };
 
+  //Sums up all character attributes for rendering
+  const attributes = [
+    {
+      name: "Alive",
+      value: alive,
+    },
+    {
+      name: "Gender",
+      value: gender ? gender : "Unknown",
+    },
+    {
+      name: "Culture",
+      value: culture ? culture : "Unknown",
+    },
+    {
+      name: "Allegiances",
+      value: getAllegiances(),
+    },
+  ];
+
   return (
-    <div>
-      <p>Name: {concatNames(aliases, name)}</p>
-      <p>Alive: {alive}</p>
-      <p>Gender: {gender ? gender : "Unknown"}</p>
-      <p>Culture: {culture ? culture : "Unknown"}</p>
-      <div>Allegiances: {getAllegiances()}</div>
+    <div className="item-container">
+      <CharacterListItemHeader fullName={concatNames(aliases, name)} />
+      {attributes.map((attribute) => (
+        <ListItemAttribute
+          key={attribute.name}
+          name={attribute.name}
+          value={attribute.value}
+        />
+      ))}
+
       <p>
         <i>
           Appeared in {appearedInBooksCount} book
           {appearedInBooksCount > 1 && `s`}.
         </i>
       </p>
-      <hr />
     </div>
   );
 };

@@ -1,0 +1,33 @@
+.item-container {
+  display: grid;
+  background-color: #5986c9;
+  color: white;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 8px -5px rgba(0, 0, 0, 0.52);
+  box-shadow: 4px 4px 8px -5px rgba(0, 0, 0, 0.52);
+  padding: 20px;
+}
+
+.item-container:hover {
+  background-color: #5a98f5;
+}
+
+.link {
+  color: #ffffff;
+  text-decoration: none;
+
+}
+
+.link:hover {
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.item-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.item-attribute {
+  font-weight: bold;
+}

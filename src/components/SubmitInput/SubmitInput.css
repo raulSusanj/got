@@ -1,0 +1,18 @@
+.submit-input-container {
+  display: flex;
+  margin: 0 5px;
+}
+
+.input-container {
+  max-width: 200px;
+  border: 1px solid #656565;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+ 
+  padding: 3px 0 3px 5px;
+}
+
+.input {
+  padding: 5px 0;
+  border: none;
+}
