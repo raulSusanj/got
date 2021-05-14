@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 import { useCharacters } from "../../api";
 import {
@@ -101,7 +101,6 @@ const Characters = () => {
   if (isError) {
     return <Error />;
   }
-  if (isLoading) return <Loader />;
 
   const onChangeGender = (event: any) => {
     filters.gender = event.target.value;
@@ -128,6 +127,7 @@ const Characters = () => {
   return (
     <div className="container">
       <h1 className="page-title">Table of Characters</h1>
+
       <div className="filter-container">
         <div className="filter-item-container">
           <label>Gender: </label>
@@ -155,16 +155,28 @@ const Characters = () => {
         </div>
       </div>
 
-      <div className="character-table">
-        {characters.length &&
-          characters.map((character: Character, index: number) => {
-            return (
-              // TODO: Replace key value with some id if exits
-              <CharacterListItem key={index.toString()} character={character} />
-            );
-          })}
-      </div>
-     <PaginationBar coordinations={pageCoordinations} onClick={onChangePage} />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Fragment>
+          <div className="character-table">
+            {characters.length &&
+              characters.map((character: Character, index: number) => {
+                return (
+                  // TODO: Replace key value with some id if exits
+                  <CharacterListItem
+                    key={index.toString()}
+                    character={character}
+                  />
+                );
+              })}
+          </div>
+          <PaginationBar
+            coordinations={pageCoordinations}
+            onClick={onChangePage}
+          />
+        </Fragment>
+      )}
     </div>
   );
 };
