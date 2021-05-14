@@ -34,10 +34,6 @@ const Characters = () => {
   ];
   const pageSizes = [
     {
-      label: "2",
-      value: 2,
-    },
-    {
       label: "10",
       value: 10,
     },
@@ -71,7 +67,7 @@ const Characters = () => {
   ];
 
   const [page, setPage] = useState<string>("1");
-  const [pageSize, setPageSize] = useState<number>(pageSizes[0].value);
+  const [pageSize, setPageSize] = useState<number>(pageSizes[1].value);
   const [culture, setCulture] = useState<string>("");
   const [filters, setFilters] = useState<any>({
     gender: "",
